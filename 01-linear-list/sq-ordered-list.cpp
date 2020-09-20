@@ -58,7 +58,7 @@ bool InsertElem(SqAscList * L, int target)
 	return true;
 }
 
-void Eliminate(SqAscList* & L)
+void Deduplication(SqAscList* & L)
 {
 //	int i;
 //	for(i = 0; i < L->length; ++i)
@@ -71,19 +71,16 @@ void Eliminate(SqAscList* & L)
 //			++i;
 //		}
 //	}
-	SqAscList * T;
-	T = InitList();
-	T->data[0] = L->data[0];
-	T->length = 0;
-	++(T->length);
-	for (int i = 1; i < L->length; ++i)
+	int new_length = 1, i = 1;
+	while (i < L->length)
 	{
-		if (L->data[i] == L->data[i-1]) continue;
-		else T->data[T->length] = L->data[i];
-		++(T->length);
+		if (L->data[i] != L->data[i-1]) {
+			L->data[new_length] = L->data[i];
+			++new_length;
+		}
+		++i;
 	}
-	free(L);
-	L = T;
+	L->length = new_length;
 }
 void ReleaseSqList(SqAscList * ptr)
 {
@@ -194,7 +191,7 @@ int main()
 	CreateList(L1,a,13);
 	CreateList(L2,b,11);
 	
-	Eliminate(L1);
+	Deduplication(L1);
 	printf("L1: ");
 	PrintSqList(L1);
 	printf("L2: ");
