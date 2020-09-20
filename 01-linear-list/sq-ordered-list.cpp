@@ -41,6 +41,7 @@ int FindElem(SqAscList * L, int target)
 }
 
 bool InsertElem(SqAscList * L, int target)
+//已知顺序表按值递增有序, 将元素插入到顺序表, 使其仍然有序。
 {
 	if (L->length == MAX_SIZE) return false;
 	int i = 0;
@@ -58,7 +59,7 @@ bool InsertElem(SqAscList * L, int target)
 	return true;
 }
 
-void Deduplication(SqAscList* & L)
+void Deduplication(SqAscList* L)
 {
 //	int i;
 //	for(i = 0; i < L->length; ++i)
@@ -82,24 +83,26 @@ void Deduplication(SqAscList* & L)
 	}
 	L->length = new_length;
 }
+
 void ReleaseSqList(SqAscList * ptr)
 {
 	free(ptr);
 }
+
 void PrintSqList(SqAscList * ptr)
 {
 	for (int i = 0; i < ptr->length; ++i) printf("%d ",ptr->data[i]);
 	printf("\n");
 }
-bool SqAscListUnion(SqAscList * La, SqAscList * Lb, SqAscList ** Lc) 
+
+bool SqAscListUnion(SqAscList * La, SqAscList * Lb, SqAscList * Lc) 
 //Lc存储La和Lb的并集, 并自动去重
 {
-	*Lc = InitList(); //为Lc申请存储空间
-	(*Lc)->length = 0;
+	Lc->length = 0;
 	int i = 0, j = 0; //设置两个下标变量分别循环La, Lb
 	while(i < La->length && j < Lb->length) 
 	{
-		if ((*Lc)->length == MAX_SIZE) return false;
+		if (Lc->length == MAX_SIZE) return false;
 		//两个顺序表已有序且递增，依次放入新的表
 		//如果之后有相邻的元素，全部跳过
 		while(i < La->length - 1 && La->data[i] == La->data[i+1]) ++i;
@@ -109,64 +112,63 @@ bool SqAscListUnion(SqAscList * La, SqAscList * Lb, SqAscList ** Lc)
 			while(j < Lb->length - 1 && Lb->data[j] == Lb->data[j+1]) ++j;
 		}
 		if (La->data[i] < Lb->data[j]) {
-			(*Lc)->data[(*Lc)->length] = La->data[i];
+			Lc->data[Lc->length] = La->data[i];
 			++i; 
 		}
 		else {
-			(*Lc)->data[(*Lc)->length] = Lb->data[j];
+			Lc->data[Lc->length] = Lb->data[j];
 			++j; 
 		}
-		++((*Lc)->length); 
+		++(Lc->length); 
 	}
 	//处理某一顺序表剩余的部分
 	while(i < La->length) {
-		(*Lc)->data[((*Lc)->length)++] = La->data[i];
+		Lc->data[(Lc->length)++] = La->data[i];
 		++i;
 		while(i < La->length && La->data[i] == La->data[i-1]) ++i;
 	}
 	while(j < Lb->length) {
-		(*Lc)->data[((*Lc)->length)++] = Lb->data[j];
+		Lc->data[(Lc->length)++] = Lb->data[j];
 		++j;
 		while(j < Lb->length && Lb->data[j] == Lb->data[j-1]) ++j;
 	}
 	return true;
 }
-bool SqAscListMerge(SqAscList * La, SqAscList * Lb, SqAscList ** Lc) 
+
+bool SqAscListMerge(SqAscList * La, SqAscList * Lb, SqAscList * Lc) 
 //Lc存储La和Lb的合并
 {
-	*Lc = InitList(); //为Lc申请存储空间
-	(*Lc)->length = 0;
+	Lc->length = 0;
 	int i = 0, j = 0; //设置两个下标变量分别循环La, Lb
 	while(i < La->length && j < Lb->length) 
 	{
-		if ((*Lc)->length == MAX_SIZE) return false;
+		if (Lc->length == MAX_SIZE) return false;
 		//两个顺序表已有序且递增，依次放入新的表
 		if (La->data[i] < Lb->data[j]) {
-			(*Lc)->data[(*Lc)->length] = La->data[i];
+			Lc->data[Lc->length] = La->data[i];
 			++i; 
 		}
 		else {
-			(*Lc)->data[(*Lc)->length] = Lb->data[j];
+			Lc->data[Lc->length] = Lb->data[j];
 			++j; 
 		}
-		++((*Lc)->length); 
+		++(Lc->length); 
 	}
 	//处理某一顺序表剩余的部分
 	while(i < La->length) {
-		(*Lc)->data[((*Lc)->length)++] = La->data[i];
+		Lc->data[(Lc->length)++] = La->data[i];
 		++i;
 	}
 	while(j < Lb->length) {
-		(*Lc)->data[((*Lc)->length)++] = Lb->data[j];
+		Lc->data[(Lc->length)++] = Lb->data[j];
 		++j;
 	}
 	return true;
 }
-//bool SqAscListDiff(SqAscList * La, SqAscList * Lb, SqAscList ** Lc);
-void SqAscListSubtract(SqAscList * La, SqAscList * Lb, SqAscList ** Lc)
+
+void SqAscListSubtract(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
 {
-	*Lc = InitList(); //为Lc申请存储空间
-	(*Lc)->length = 0;
+	Lc->length = 0;
 	for (int i = 0; i < La->length; ++i) {
 		bool exist_in_B = false;
 		for (int j = 0; j < Lb->length; ++j) {
@@ -176,11 +178,33 @@ void SqAscListSubtract(SqAscList * La, SqAscList * Lb, SqAscList ** Lc)
 			}
 		}
 		if (!exist_in_B) {
-			(*Lc)->data[(*Lc)->length] = La->data[i];
-			++((*Lc)->length); 
+			Lc->data[Lc->length] = La->data[i];
+			++(Lc->length); 
 		}
 	}
 }
+
+/*void SqAscListIntersection(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
+//集合有序，可简化到O(n)的复杂度
+{
+	int i = 0, j = 0;
+	if (La->length == 0 || Lb->length == 0) 
+	{ //集合有一个为空，返回空集
+		Lc->length = 0;
+		return;
+	}
+	Lc->length = 0;
+	while (i < La->length && j < Lb->length)
+	{
+		while(i < La->length - 1 && La->data[i] == La->data[i+1]) ++i;
+		while(j < Lb->length - 1 && Lb->data[j] == Lb->data[j+1]) ++j;
+		if (La->data[i] == Lb->data[j]) Lc->data[(Lc->length)++] = La->data[i];
+		else if (La->data[i] < Lb->data[j]) ++i;
+		else ++j; 
+	}
+}*/
+
+//bool SqAscListDiff(SqAscList * La, SqAscList * Lb, SqAscList * Lc);
 
 int main()
 {
@@ -198,7 +222,7 @@ int main()
 	PrintSqList(L2);
 
 	SqAscList * L3 = InitList();
-	SqAscListSubtract(L1,L2,&L3);
+	SqAscListSubtract(L1,L2,L3);
 	printf("L1 - L2: ");
 	PrintSqList(L3);
 	
@@ -206,12 +230,16 @@ int main()
 	printf("L3 <- 4: ");
 	PrintSqList(L3);
 	
-	SqAscListUnion(L1,L2,&L3);
+	SqAscListUnion(L1,L2,L3);
 	printf("L1 + L2: ");
 	PrintSqList(L3);
 	
-	SqAscListMerge(L1,L2,&L3);
-	printf("L1 & L2: ");
+	SqAscListMerge(L1,L2,L3);
+	printf("L1 ++ L2: ");
+	PrintSqList(L3);
+
+	//SqAscListIntersection(L1,L2,L3);
+	printf("L1 ^ L2: ");
 	PrintSqList(L3);
 
 	ReleaseSqList(L1);
