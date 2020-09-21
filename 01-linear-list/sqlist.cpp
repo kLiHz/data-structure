@@ -143,40 +143,36 @@ void Deduplication(SqList * ptr)
 //删除列表中重复元素
 {
 	int k = 1, i = 1; 
-	while (i <= ptr->length)
+	//两个变量，k代表当前要写入的位置，i用来遍历顺序表
+	while (i <= ptr->length) 
 	{
-		bool isExist = false;
-		for (int j = k - 1; j > 0; j--){
-			if (ptr->data[i] == ptr->data[j]) {
-				isExist = true;
+		//当前讨论data[i]这个数据
+		bool isExist = false; //记录当前元素是否已经存在。假设不存在
+		for (int j = k - 1; j > 0; j--) //遍历之前的元素
+		{ 
+			if (ptr->data[i] == ptr->data[j]) 
+			{
+				isExist = true; //存在相同的元素
 				break;
 			}
 		}
+		//之前不存在相同的元素，则将data[i]写在k位置
 		if (!isExist) {ptr->data[k] = ptr->data[i]; ++k;}
-		++i;
+		++i; //循环变量+1
 	}
-	ptr->length = k - 1;
+	ptr->length = k - 1; //修改顺序表的长度
 }
 
-bool SqListIntersection(SqList * La, SqList * Lb, SqList * Lc)
+bool SqListIntersection(SqList * La, SqList * Lb, SqList * Lc) //求两个集合的交集
 {
 	int i, j;
-	Lc->length = 0;
-	for (i = 1; i <= Lb->length; i++) //依次处理集合Lb中所有元素
+	Lc->length = 0; //C用来存放结果，先将长度截为0
+	for (i = 1; i <= La->length; i++) //依次处理集合La中所有元素
 	{
 		if (Lc->length == MAX_SIZE) return false;
-		////当前处理集合Lb中元素data[i]
-		//j = 1;
-		//while (j <= La->length && La->data[j] != Lb->data[i]) j++;
-		////判断在集合La中是否有与其相同的元素
-		//if (j <= La->length) //若集合La中有相同的，则将Lb中元素data[i]添加在Lc最后。
-		//{
-		//	Lc->length++;
-		//	Lc->data[Lc->length] = Lb->data[i];
-		//}
-
-		//判断在集合La中是否有与其相同的元素
-		bool exist_in_B = false;
+		//当前处理集合La中元素data[i]
+		//判断在集合Lb中是否有与其相同的元素
+		bool exist_in_B = false; //假设B中没有该数据
 		for (int j = 1; j <= Lb->length; ++j)
 		{
 			if (Lb->data[j] == La->data[i]) {
@@ -184,9 +180,10 @@ bool SqListIntersection(SqList * La, SqList * Lb, SqList * Lc)
 				break;
 			}
 		}
-		if (exist_in_B) {
+		if (exist_in_B) //若集合Lb中有相同的
+		{
 			++(Lc->length); 
-			Lc->data[Lc->length] = La->data[i];
+			Lc->data[Lc->length] = La->data[i]; //则将La中元素data[i]添加在Lc最后
 		}
 		//另一种写法
 		//if(LocateElem(La,Lb->data[i])) ListInsertElem(Lc,Lc->length,Lb->data[i]);
@@ -196,21 +193,23 @@ bool SqListIntersection(SqList * La, SqList * Lb, SqList * Lc)
 }
 
 bool SqListSubtract(SqList * La, SqList * Lb, SqList * Lc)
+//求顺序表A-B，即从顺序表A中减去B中出现过的元素
 {
 	int i, j;
-	Lc->length = 0;
-	for (int i = 1; i <= La->length; i++)
+	Lc->length = 0; //C用来存放结果，先将长度截为0
+	for (int i = 1; i <= La->length; i++)  //依次处理集合A中所有元素
 	{
 		if (Lc->length == MAX_SIZE) return false;
-		bool exist_in_B = false;
+		bool not_exist_in_B = true; //先假设B中不含有该数据
 		for (int j = 1; j <= Lb->length; ++j)
 		{
 			if (Lb->data[j] == La->data[i]) {
-				exist_in_B = true;
+				not_exist_in_B = false;
 				break;
 			}
 		}
-		if (!exist_in_B) {
+		if (not_exist_in_B) //如果B中不含有该数据
+		{ 
 			++(Lc->length); 
 			Lc->data[Lc->length] = La->data[i];
 		}
@@ -219,18 +218,21 @@ bool SqListSubtract(SqList * La, SqList * Lb, SqList * Lc)
 }
 
 void SqListDiff(SqList * La, SqList * Lb, SqList * Lc)
+//求差集（数学上的差集）作业的差集指的是A-B ...$#%..@*#%
 {
 	SqList *L1,*L2;
 	L1 = InitList();
 	L2 = InitList();
-	//SqListUnion(La,Lb,L1);
-	//SqListIntersection(La,Lb,L2);
-	//SqListSubtract(L1,L2,Lc);
-	SqListSubtract(La,Lb,L1);
-	SqListSubtract(Lb,La,L2);
-	SqListUnion(L1,L2,Lc);
-	ReleaseSqList(L1);
-	ReleaseSqList(L2);
+	//一种方法
+	//SqListUnion(La,Lb,L1);        //求并集
+	//SqListIntersection(La,Lb,L2); //求交集
+	//SqListSubtract(L1,L2,Lc);     //相减
+	//另一种方法
+	SqListSubtract(La,Lb,L1); //L1 = A - B
+	SqListSubtract(Lb,La,L2); //L2 = B - A
+	SqListUnion(L1,L2,Lc);    //C  = L1 + L2
+	ReleaseSqList(L1); //记得释放内存
+	ReleaseSqList(L2); //记得释放内存
 }
 
 void PrintSqList(SqList * ptr)
