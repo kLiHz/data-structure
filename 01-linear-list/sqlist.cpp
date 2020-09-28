@@ -6,6 +6,7 @@
 //https://tieba.baidu.com/p/2166453720
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstring>
 #define MAX_SIZE 30
 typedef int ElemType;
 typedef struct
@@ -25,7 +26,10 @@ SqList * InitList() //顺序表L初始化
 {
 	//申请空间用于存储顺序表L，返回指针变量ptr，指向空间首地址。
 	SqList* ptr = (SqList*)malloc(sizeof(SqList)); 
-	ptr->length = 0;
+	//记得将存储的数据个数改为0
+	ptr->length = 0; 
+	//在初始化时将顺序表清零，可选
+	//memset(ptr,0,sizeof(SqList)); 
 	return ptr;
 }
 
@@ -40,7 +44,7 @@ int ListLength(SqList *L)
 	return L->length;
 }
 bool GetElem(SqList *L, int i, ElemType * e)
-//取出顺序表L中的第i个元素
+//取出顺序表L中的第i个元素，将值存储在参数e指向的地址里
 {
 	if (i < 1 || i > L->length) return false; //索引越界
 	else *e = L->data[i];
@@ -218,7 +222,7 @@ bool SqListSubtract(SqList * La, SqList * Lb, SqList * Lc)
 }
 
 void SqListDiff(SqList * La, SqList * Lb, SqList * Lc)
-//求差集（数学上的差集）作业的差集指的是A-B ...$#%..@*#%
+//求差集; 另，作业的差集指的是A-B...我..$#%..@*#%...
 {
 	SqList *L1,*L2;
 	L1 = InitList();

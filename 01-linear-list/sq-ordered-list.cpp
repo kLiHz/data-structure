@@ -45,11 +45,7 @@ bool InsertElem(SqAscList * L, int target)
 {
 	if (L->length == MAX_SIZE) return false;
 	int i = 0;
-	while(i < L->length) 
-	{
-		if (L->data[i] > target) break;
-		++i;
-	}
+	while(i < L->length && target >= L->data[i]) ++i; 
 	for (int j = L->length; j > i; --j)
 	{
 		L->data[j] = L->data[j-1];
