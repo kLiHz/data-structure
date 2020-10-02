@@ -33,12 +33,12 @@ int main()
     DeleteLastE(L1,3); DisplayList(L1);
 
     ValueAB(L1,2,8,L3); DisplayList(L3);
-    //EmptyList(L3);
-    //AscListUnion(L1,L2,L3); DisplayList(L3);
-    //EmptyList(L3);
-    //AscListIntersection(L1,L2,L3); DisplayList(L3);
-    //EmptyList(L3);
-    //AscListSubtract(L1,L2,L3); DisplayList(L3);
+    EmptyList(L3);
+    AscListUnion(L1,L2,L3); DisplayList(L3);
+    EmptyList(L3);
+    AscListIntersection(L1,L2,L3); DisplayList(L3);
+    EmptyList(L3);
+    AscListSubtract(L1,L2,L3); DisplayList(L3);
 
     ReleaseList(L1);
     ReleaseList(L2);

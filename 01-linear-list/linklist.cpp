@@ -336,18 +336,16 @@ void AscListUnion(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
     La = La->next;
     Lb = Lb->next;
     while (La != NULL && Lb != NULL) {
+        Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
         if (La->data < Lb->data) {
-            Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
             Lc->next->data = La->data;
-            Lc = Lc->next;
             La = La->next; //抽象的La++;
         }
         else {
-            Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
             Lc->next->data = Lb->data;
-            Lc = Lc->next;
             Lb = Lb->next; //抽象的Lb++;
         }
+        Lc = Lc->next;
     }
     while (La != NULL) {
         Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
@@ -364,59 +362,67 @@ void AscListUnion(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
     Lc->next = NULL;
 }
 
-/*void AscListIntersection(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
+void AscListIntersection(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
 {
+    if (!IsEmptyList(Lc)) EmptyList(Lc);
     La = La->next;
     Lb = Lb->next;
-    //用while循环实现每次找到相同元素的最后一个
-    while (La->next != NULL && La->data == La->next->data) La = La->next;
-    while (Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
+    //用这样的while循环实现每次找到相同元素的最后一个
+    while (La != NULL && La->next != NULL && La->data == La->next->data) La = La->next;
+    while (Lb != NULL && Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
     while (La != NULL && Lb != NULL) {
         if (La->data == Lb->data) {
             Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
-            Lc->data = La->data;
+            Lc->next->data = La->data;
             Lc = Lc->next;
-            while (La->next != NULL && La->data == La->next->data) La = La->next;
-            while (Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
+            La = La->next;
+            Lb = Lb->next;
+            while (La != NULL && La->next != NULL && La->data == La->next->data) La = La->next;
+            while (Lb != NULL && Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
         }
-        else if (La->data < Lb->data) 
-            while (La->next != NULL && La->data == La->next->data) La = La->next;
-        else 
-            while (Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
+        else if (La->data < Lb->data) {
+            La = La->next;
+            while (La != NULL && La->next != NULL && La->data == La->next->data) La = La->next;
+        }
+        else {
+            Lb = Lb->next;
+            while (Lb != NULL && Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
+        }
     }
     Lc->next = NULL;
 }
 void AscListSubtract(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
 {
+    if (!IsEmptyList(Lc)) EmptyList(Lc);
     La = La->next;
     Lb = Lb->next;
-    //用while循环实现每次找到相同元素的最后一个
-    while (La->next != NULL && La->data == La->next->data) La = La->next;
-    while (Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
+    //用这样的while循环实现每次找到相同元素的最后一个
+    while (La != NULL && La->next != NULL && La->data == La->next->data) La = La->next;
+    while (Lb != NULL && Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
     while (La != NULL && Lb != NULL) {
         while (La->data < Lb->data) {
             Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
-            Lc->data = La->data;
+            Lc->next->data = La->data;
             Lc = Lc->next;
             La = La->next;
-            while (La->next != NULL && La->data == La->next->data) La = La->next;
+            while (La != NULL && La->next != NULL && La->data == La->next->data) La = La->next;
         }
         if (La->data == Lb->data) {
             La = La->next;
-            while (La->next != NULL && La->data == La->next->data) La = La->next;
+            while (La != NULL && La->next != NULL && La->data == La->next->data) La = La->next;
         }
         Lb = Lb->next;
-        while (Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
+        while (Lb != NULL && Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
     }
     while (La != NULL) {
         Lc->next = (LinkNode*)malloc(sizeof(LinkNode));
-        Lc->data = La->data;
+        Lc->next->data = La->data;
         Lc = Lc->next;
         La = La->next;
-        while (La->next != NULL && La->data == La->next->data) La = La->next;
+        while (Lb != NULL && Lb->next != NULL && Lb->data == Lb->next->data) Lb = Lb->next;
     }
     Lc->next = NULL;
-}*/
+}
 
 /*void AscListDiff()
 {
