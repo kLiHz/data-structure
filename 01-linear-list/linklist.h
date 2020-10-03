@@ -3,6 +3,10 @@
 
 #include<iostream>
 
+#define bool int
+#define true 1
+#define false 0
+
 typedef int ElemType;
 typedef struct LNode
 {
@@ -16,10 +20,10 @@ void EmptyList(LinkNode * head);
 bool IsEmptyList(LinkNode * L);
 int ListLength(LinkNode * p);
 void DisplayList(LinkNode * p);
-bool GetElem(LinkNode * p, int i, ElemType & e);
+bool GetElem(LinkNode * p, int i, ElemType * e);
 int LocateElem(LinkNode * p, ElemType e);
 bool ListInsert(LinkNode *p, int i, ElemType e);
-bool ListDelete(LinkNode *p, int i, ElemType & e);
+bool ListDelete(LinkNode *p, int i, ElemType * e);
 void InsertArrayListFront(LinkNode *L, ElemType a[], int n);
 void InsertArrayListRear(LinkNode *L, ElemType a[], int n);
 

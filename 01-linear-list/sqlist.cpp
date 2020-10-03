@@ -8,6 +8,10 @@
 #include <stdio.h>
 #include <cstring>
 #define MAX_SIZE 30
+#define bool int
+#define true 1
+#define false 0
+
 typedef int ElemType;
 typedef struct
 {
@@ -87,7 +91,7 @@ bool ListDeleteElem(SqList * L, int i, ElemType * e)
 	L->length--;
 	return true;
 }
-bool InsertXY(SqList *&L, ElemType x, ElemType y)
+bool InsertXY(SqList * L, ElemType x, ElemType y)
 //示例（1）试编写算法在值为x的元素之后插入值为y的元素。
 {
 	if (L->length == MAX_SIZE) return false;
@@ -105,7 +109,7 @@ bool InsertXY(SqList *&L, ElemType x, ElemType y)
 	return true;
 }
 //示例（2）试编写算法删除最后一个值为e的元素。
-bool DeleteLastElem(SqList *&L, ElemType e)
+bool DeleteLastElem(SqList * L, ElemType e)
 {
 	int i = L->length;
 	while (i > 0 && L->data[i] != e) i--;

@@ -60,7 +60,7 @@ void DisplayList(LinkNode * p)
     //std::cout << std::endl;
 }
 
-bool GetElem(LinkNode * p, int i, ElemType & e)
+bool GetElem(LinkNode * p, int i, ElemType * e)
 {
     if (i < 0) return false;
     int j = 0;
@@ -107,7 +107,7 @@ bool ListInsert(LinkNode *p, int i, ElemType e)
         return true;
     }
 }
-bool ListDelete(LinkNode *p, int i, ElemType & e)
+bool ListDelete(LinkNode *p, int i, ElemType * e)
 {
     if (i < 1) return false;
     int j = 0;

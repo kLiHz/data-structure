@@ -17,8 +17,8 @@ int main()
     /*ListInsert(L1,1,10);
     ListInsert(L1,5,10);
     DisplayList(L1);
-    ListDelete(L1,1,e);
-    ListDelete(L1,5,e);
+    ListDelete(L1,1,&e);
+    ListDelete(L1,5,&e);
     DisplayList(L1);
     ReverseList(L1);
     DisplayList(L1);
