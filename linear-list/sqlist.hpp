@@ -23,7 +23,7 @@ public:
 	int size();
 	SqTable & operator= (const SqTable & l);
 	SqTable subtable(int idx, int _length);
-	void enlarge(int);
+	void enlarge();
 	void push_back(const int & element);
 	void sort();
 	void deduplication();

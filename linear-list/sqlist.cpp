@@ -2,17 +2,18 @@
 
 SqTable::SqTable() {
 	order = 0;
-	length = arraySize = 0;
+	length = 0;
+	arraySize = 16;
+	ptr = new int[16];
 	ptr = nullptr;
 }
 
 SqTable::SqTable(const std::initializer_list<int> & l) {
 	order = 0;
-	length = arraySize = 0;
-	ptr = nullptr;
-	for (auto a : l) {
-		push_back(a);
-	}
+	length = 0;
+	arraySize = 16;
+	ptr = new int[16];
+	for (auto a : l) { push_back(a); }
 }
 
 SqTable::SqTable(int _size) : arraySize(_size) {
@@ -82,9 +83,11 @@ SqTable SqTable::subtable(int idx, int _length){
 	return SqTable(&ptr[idx], _length);
 }
 
-void SqTable::enlarge(int enlargeNum = 32){
-	int * newPtr = new int[arraySize + enlargeNum];
-	arraySize = arraySize + enlargeNum;
+void SqTable::enlarge(){
+	//倍增均摊复杂度每次O(1), 而递增策略每次均摊复杂度O(n)
+	//每次扩增成本是会不断上升的, 所以得同时让扩增频率减少，最容易想到的就是倍增 -- @ayalhw
+	arraySize = arraySize * 2;
+	int * newPtr = new int[arraySize];
 	memcpy(newPtr, ptr, sizeof(int) * length);
 	if (ptr != nullptr) delete[] ptr;
 	ptr = newPtr;
@@ -137,6 +140,7 @@ void SqTable::deduplication() {
 		}
 		length = k;
 	}
+	//也可以先排序再去重嘛...
 }
 
 void SqTable::print() {
@@ -381,4 +385,5 @@ bool SqTable::erase_element(int target) {
 		length = k;
 		return if_found;
 	}
+	//也可以尝试先排序再删除? 时间也许还能快些?
 }
