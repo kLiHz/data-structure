@@ -70,7 +70,7 @@ bool GetElem(LinkNode * p, int i, ElemType * e)
     }
     if (p == NULL) return false;
     else {
-        e = p->data;
+        *e = p->data;
         return true;
     }
 }
@@ -111,7 +111,7 @@ bool ListDelete(LinkNode *p, int i, ElemType * e)
 {
     if (i < 1) return false;
     int j = 0;
-    //因为是单链表，要想将数据插入在i位置，需要修改i-1的next指针
+    //因为是单链表，要删除在i位置的数据，需要修改i-1的next指针
     while (j < i - 1 && p != NULL) {
         ++j;
         p = p->next;
@@ -121,7 +121,7 @@ bool ListDelete(LinkNode *p, int i, ElemType * e)
         LinkNode * t = p->next;
         if (t == NULL) return false; //不存在第i个节点
         else {
-            e = t->data;
+            *e = t->data;
             p->next = t->next;
             free(t);
             return true;
