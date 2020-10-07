@@ -79,6 +79,7 @@ void ValueAB(LinkNode * p, ElemType low, ElemType high, LinkNode * L1);
 //编写算法利用归并法分别求出两个集合的交集、并集和差集，皆为按值递增有序。
 //(要求：保留La和Lb两个链表，建立新的链表存储结果)。
 void AscListUnion(LinkNode *La, LinkNode * Lb, LinkNode * Lc);
+void AscListUnion_1(LinkNode *p, LinkNode *s, LinkNode *r);
 void AscListIntersection(LinkNode *La, LinkNode * Lb, LinkNode * Lc);
 void AscListSubtract(LinkNode *La, LinkNode * Lb, LinkNode * Lc);
 

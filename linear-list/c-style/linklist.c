@@ -89,6 +89,7 @@ int LocateElem(LinkNode * p, ElemType e)
     if (p == NULL) return 0;
     else return i;
 }
+
 bool ListInsert(LinkNode *p, int i, ElemType e)
 {
     if (i < 1) return false;
@@ -107,6 +108,7 @@ bool ListInsert(LinkNode *p, int i, ElemType e)
         return true;
     }
 }
+
 bool ListDelete(LinkNode *p, int i, ElemType * e)
 {
     if (i < 1) return false;
@@ -128,8 +130,9 @@ bool ListDelete(LinkNode *p, int i, ElemType * e)
         }
     }
 }
-void InsertArrayListFront(LinkNode *L, ElemType a[], int n)
+
 //从a数组获取n个数据，采用头插法插入
+void InsertArrayListFront(LinkNode *L, ElemType a[], int n)
 {
     if (!IsEmptyList(L)) EmptyList(L);
     //L->next = NULL;
@@ -140,8 +143,9 @@ void InsertArrayListFront(LinkNode *L, ElemType a[], int n)
         L->next = new_node;
     }
 }
-void InsertArrayListRear(LinkNode *L, ElemType a[], int n)
+
 //从a数组获取n个数据，采用尾插法插入
+void InsertArrayListRear(LinkNode *L, ElemType a[], int n)
 {
     if (!IsEmptyList(L)) EmptyList(L);
     LinkNode * rear = L;
@@ -173,6 +177,7 @@ bool InsertXY(LinkNode * p, ElemType x, ElemType y)
         return true;
     }
 }
+
 //示例 （2）已知单链表L中所有元素均为整数，试编写算法逆置单链表。
 //思路：从头至尾依次将每个元素头插到单链表中
 void ReverseList(LinkNode * L)
@@ -280,6 +285,7 @@ void AscListInsert(LinkNode * p, ElemType e)
         return;
     }
 }
+
 //2. 编写算法删除单链表L中最后一个值为e的数据元素。
 bool DeleteLastE(LinkNode * p, ElemType e)
 {
@@ -308,6 +314,7 @@ bool DeleteLastE(LinkNode * p, ElemType e)
     }
     return is_deleted;
 }
+
 //3. 已知单链表L为按值递增有序的，编写算法将数据元素值在区间[low , high]内的所有结点取出建立一个按值递增的新单链表L1。
 void ValueAB(LinkNode * p, ElemType low, ElemType high, LinkNode * L)
 {
@@ -362,6 +369,50 @@ void AscListUnion(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
     Lc->next = NULL;
 }
 
+#define __min(a,b) (((a) < (b)) ? (a) : (b))
+
+void AscListUnion_1(LinkNode *p, LinkNode *s, LinkNode *r)
+{
+    p = p->next;
+    s = s->next;
+    int previous_value = __min(p->next->data, s->next->data) - 1; 
+    //用一个值存储下前一个值来判断是否为重复元素
+    while (p != NULL && s != NULL) {
+        if (p->data < s->data) {
+            if (previous_value != p->data) {
+                r->next = (LinkNode *)malloc(sizeof(LinkNode));
+                r->next->data = previous_value = p->data;
+                r = r->next;
+            }
+            p = p->next;
+        } else {
+            if (previous_value != p->data) {
+                r->next = (LinkNode *)malloc(sizeof(LinkNode));
+                r->next->data = previous_value = s->data;
+                r = r->next;
+            }
+            s = s->next;
+        }
+    }
+    while (s != NULL) {
+        if (s->data > previous_value) {
+            r->next = (LinkNode *)malloc(sizeof(LinkNode));
+            r->next->data = previous_value = s->data;
+            r = r->next;
+        }
+        s = s->next;
+    }
+    while (p != NULL) {
+        if (p->data > previous_value) {
+            r->next = (LinkNode *)malloc(sizeof(LinkNode));
+            r->next->data = previous_value = p->data;
+            r = r->next;
+        }
+        p = p->next;
+    }
+    r->next = NULL;
+} //@zsq写的; 觉得添加一个变量用来去重的思路还不错，故添加进来
+
 void AscListIntersection(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
 {
     if (!IsEmptyList(Lc)) EmptyList(Lc);
@@ -391,6 +442,7 @@ void AscListIntersection(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
     }
     Lc->next = NULL;
 }
+
 void AscListSubtract(LinkNode *La, LinkNode * Lb, LinkNode * Lc)
 {
     if (!IsEmptyList(Lc)) EmptyList(Lc);
