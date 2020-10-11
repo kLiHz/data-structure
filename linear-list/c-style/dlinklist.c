@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 typedef struct Node{
-	int value;
-	struct Node *prev, *next;
+    int value;
+    struct Node *prev, *next;
     int located_times; //被访问(locate)次数; 排序、插入后记得归0
     //LocateElem()会增加元素的访问次数，并且上浮元素的位置。
 } DLinkList;
@@ -16,10 +16,10 @@ typedef DLinkList DLinkNode;
 
 DLinkList* CreateDLinkList()
 {
-	DLinkNode * node = (DLinkNode *)malloc(sizeof(DLinkList));
-	//为了编程方便，用一个空节点作为双向链表的头/尾节点，不存数据
-	//这个双向链表可以理解为一个循环的结构
-	if (node != NULL) {
+    DLinkNode * node = (DLinkNode *)malloc(sizeof(DLinkList));
+    //为了编程方便，用一个空节点作为双向链表的头/尾节点，不存数据
+    //这个双向链表可以理解为一个循环的结构
+    if (node != NULL) {
         node->prev = node;
         node->next = node;
         node->located_times = -1;
@@ -73,16 +73,16 @@ void InsertArray(DLinkNode * L, int a[], int n)
         j = j->next;
     }
     //体会循环链表所带来的的相同作用的不同写法
-	/*DLinkList *s;
-	for (int i = 0; i < n; i++)
-	{
-		s = (DLinkList *)malloc(sizeof(DLinkList));
-		s->value = a[i];
-		s->next = L;
-		s->prev = L->prev;
-		L->prev->next = s;
-		L->prev = s;
-	}*/
+    /*DLinkList *s;
+    for (int i = 0; i < n; i++)
+    {
+        s = (DLinkList *)malloc(sizeof(DLinkList));
+        s->value = a[i];
+        s->next = L;
+        s->prev = L->prev;
+        L->prev->next = s;
+        L->prev = s;
+    }*/
 }
 
 //其实应该再写一个将链表插入链表的函数的
@@ -138,22 +138,22 @@ void InsertDLinkNode(DLinkNode * p, int elem)
 //删除节点p
 void DeleteDLinkNode(DLinkNode * p)
 {
-	p->prev->next = p->next;
-	p->next->prev = p->prev;
-	free(p);
+    p->prev->next = p->next;
+    p->next->prev = p->prev;
+    free(p);
 }
 
 //示例：判断双向循环链表是否按值对称
 bool IsSymmetricalDLinkList(DLinkList *L)
 {
-	DLinkList *p, *q;
-	p = L->next;
-	q = L->prev;
-	while (p != q && q->next != p) {
+    DLinkList *p, *q;
+    p = L->next;
+    q = L->prev;
+    while (p != q && q->next != p) {
         if (p->value == q->value){
-			p = p->next;
-			q = q->prev;
-		}
+            p = p->next;
+            q = q->prev;
+        }
         else return false;
     }
     return true;
@@ -172,8 +172,8 @@ void PrintDLinkList(DLinkList * L)
 
 int main()
 {
-	DLinkList *L = CreateDLinkList();
-	int a[] = {11, 22, 33, 44, 55, 66, 77};
+    DLinkList *L = CreateDLinkList();
+    int a[] = {11, 22, 33, 44, 55, 66, 77};
     InsertArray(L,a,7);
     LocateElem(L,44); printf("After locating %d: ",44); PrintDLinkList(L);
     LocateElem(L,55); printf("After locating %d: ",55); PrintDLinkList(L);
