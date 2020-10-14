@@ -266,24 +266,15 @@ void AscListInsert(LinkNode * p, ElemType e)
 {
     LinkNode * pre_i = p;
     p = p->next;
-    while (p != NULL) {
-        if (p->data > e) {
-            LinkNode * new_node = (LinkNode *)malloc(sizeof(LinkNode));
-            new_node->data = e;
-            pre_i->next = new_node;
-            new_node->next = p;
-            return;
-        }
+    while (p != NULL && p->data < e) {
         pre_i = p;
         p = p->next;
     }
-    if (p == NULL) {
-        LinkNode * new_node = (LinkNode *)malloc(sizeof(LinkNode));
-        new_node->data = e;
-        pre_i->next = new_node;
-        new_node->next = p;
-        return;
-    }
+    LinkNode * new_node = (LinkNode *)malloc(sizeof(LinkNode));
+    new_node->data = e;
+    pre_i->next = new_node;
+    new_node->next = p;
+    return;
 }
 
 //2. 编写算法删除单链表L中最后一个值为e的数据元素。
