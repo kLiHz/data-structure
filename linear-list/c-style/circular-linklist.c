@@ -117,14 +117,55 @@ LinkList * SubCLinkList(LinkNode * a, LinkNode * b)
     return rear;
 }
 
+LinkList * AscCLinkListInsert(LinkList * rear, ElemType elem)
+{
+    LinkNode * i = rear->next;
+    while(i != rear && i->next->data < elem) { i = i->next; }
+    LinkNode * t = (LinkNode*)malloc(sizeof(LinkNode));
+    t->data = elem;
+    t->next = i->next;
+    i->next = t;
+    if (rear == i) rear = t;
+    return rear;
+}
+
+LinkNode * AscCLinkListDeleteAll(LinkList * rear, ElemType elem)
+{
+    LinkNode * i = rear;
+    while(i->next != rear && i->next->data != elem) { i = i->next; }
+    if (i->next == rear) {
+        if (i->next->data != elem) return rear;
+    }
+    LinkNode * left = i->next;
+    LinkNode * right = left;
+    while (right != rear && right->data == elem) {
+        LinkNode * t = right;
+        right = right->next;
+        free(t);
+    }
+    i->next = right;
+    if (rear->data == elem) {
+        i->next = rear->next;
+        free(rear);
+        rear = i;
+    }
+    return rear;
+}
+
 int main()
 {
-    int a[]= {5,3,2,1,2,8,4,5,3,7,8,2,1};
-    LinkList* o = ConstructCLinkList(a, 13);
+    int a[]= {5,3,2,2,8,4,5,3,7,8,2,1};
+    LinkList* o = ConstructCLinkList(a, 12);
     DisplayCLinkList(o);
     o = SortCLiinkList(o);
-    LinkList* p = SubCLinkList(FindElement(o,2),FindElement(o,7));
     DisplayCLinkList(o);
+    o = AscCLinkListInsert(o, 9);
+    DisplayCLinkList(o);
+    o = AscCLinkListDeleteAll(o, 9);
+    DisplayCLinkList(o);
+    o = AscCLinkListDeleteAll(o, 8);
+    DisplayCLinkList(o);
+    LinkList* p = SubCLinkList(FindElement(o,2), FindElement(o,7));
     DisplayCLinkList(p);
     ReleaseCLinkList(o);
     ReleaseCLinkList(p);
