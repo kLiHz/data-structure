@@ -90,14 +90,44 @@ LinkNode * SortCLiinkList(LinkNode * rear) {
     return rear;
 }
 
+LinkNode * FindElement(LinkNode * rear, ElemType elem)
+{
+    LinkNode * i = rear->next;
+    while(i != rear && i->data != elem) { i = i->next; }
+    if (i == rear) {
+        if (i->data == elem) return i;
+        else return NULL;
+    }
+    else return i;
+}
+
+LinkList * SubCLinkList(LinkNode * a, LinkNode * b)
+{
+    if (a == NULL || b == NULL) return NULL;
+    LinkNode * rear = (LinkNode *)malloc(sizeof(LinkNode));
+    LinkNode * i = rear;
+    while (a != b) {
+        i->next = (LinkNode *)malloc(sizeof(LinkNode));
+        i->next->data = a->data;
+        a = a->next;
+        i = i->next;
+    }
+    i->next = rear;
+    rear->data = b->data;
+    return rear;
+}
+
 int main()
 {
     int a[]= {5,3,2,1,2,8,4,5,3,7,8,2,1};
     LinkList* o = ConstructCLinkList(a, 13);
     DisplayCLinkList(o);
     o = SortCLiinkList(o);
+    LinkList* p = SubCLinkList(FindElement(o,2),FindElement(o,7));
     DisplayCLinkList(o);
+    DisplayCLinkList(p);
     ReleaseCLinkList(o);
+    ReleaseCLinkList(p);
     return 0;
 }
 
