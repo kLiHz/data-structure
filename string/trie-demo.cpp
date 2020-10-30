@@ -1,7 +1,8 @@
 #include <iostream>
+//#include <conio.h>
 #include "trie.hpp"
 
-int main() //TestProgram
+int main()
 {
     void help();
     trie::Trie<char> words;
@@ -9,10 +10,12 @@ int main() //TestProgram
     help();
     while (flag)
     {
-        std::string str;
+        std::string str, usr_input;
         std::cout << "> ";
-        char ch = getch();
-        std::cout << ch << "\n";
+        //char ch = getch();
+        //std::cout << ch << "\n";
+        std::getline(std::cin, usr_input);
+        char ch = usr_input[0];
         switch (ch)
         {
         case 'a':

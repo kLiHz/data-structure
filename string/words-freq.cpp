@@ -16,8 +16,10 @@ int main(int argc, char* argv[]) {
     std::string useless = "(),.;?!\"-";
     trie::Trie<char> words;
     while (inFile >> t) { 
-        while (useless.find(*(t.begin())) != -1) t.erase(t.begin());
-        while (useless.find(*(t.rbegin())) != -1) t.pop_back();
+        size_t l = 0, r = t.size() - 1;
+        while (useless.find(t[l]) != -1) ++l;
+        while (useless.find(t[r]) != -1) --r;
+        t = t.substr(l, r - l + 1);
         auto i = t.begin();
         while (i != t.end()) {
             if (*i >= 'A' && *i <= 'Z') *i = *i + ('a' - 'A');

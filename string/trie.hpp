@@ -5,7 +5,7 @@
 #include <cstring>
 #include <list>
 #include <stack>
-#include <conio.h>
+
 namespace trie
 {
     template<typename CHAR_TYPE>
