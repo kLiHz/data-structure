@@ -5,7 +5,6 @@ SqTable::SqTable() {
 	length = 0;
 	arraySize = 16;
 	ptr = new int[16];
-	ptr = nullptr;
 }
 
 SqTable::SqTable(const std::initializer_list<int> & l) {
