@@ -36,6 +36,7 @@ public:
 	int binary_search(int target, int * tgt_idx = nullptr);
 	int binary_find_first_of(int target, int * tgt_idx = nullptr);
 	int binary_find_last_of(int target, int * tgt_idx = nullptr);
+	int upper_bound(int target);
 	int find(int target);
 	void push(int target);
 	void insert(int idx, int target);

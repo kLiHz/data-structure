@@ -220,6 +220,19 @@ int SqTable::binary_find_last_of(int target, int * tgt_idx) {
 	}
 }
 
+//查找target的上界，即查找第一个大于target的元素的位置
+int SqTable::upper_bound(int target)
+{
+	int x = 0, y = length - 1, mid; //注意右端点y的初始值
+	while (x <= y) {
+		mid = (x + y) / 2;
+		if (ptr[mid] <= target) x = mid + 1;
+		else y = mid - 1;
+	}
+	//如果没有找到target, 则target应在y和y+1(或者说x)之间的位置
+	return y + 1;
+}
+
 //返回查找目标的下标, -1表示未查找到
 int SqTable::find(int target) {
 	if (order == 1) {
@@ -332,15 +345,7 @@ void SqTable::push(int target)
 		if (target > ptr[length - 1]) push_back(target);
 		//使用二分查找找到元素位置
 		//考虑到有重复元素，尽可能在连续区间的后面插入，以减少元素挪动，提高效率
-		//因为涉及到查找不到元素的情况
-		int aim_idx = -1;
-		if (binary_find_last_of(target, &aim_idx) == -1) {
-			//std::cout << aim_idx << std::endl; 
-			insert(aim_idx,target);
-		} else { //如果找到了target的最后出现位置
-			//std::cout << aim_idx << std::endl; 
-			insert(aim_idx + 1, target);
-		}
+		insert(upper_bound(target), target);
 	}
 	//不能再++length了
 }
