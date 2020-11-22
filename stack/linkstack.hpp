@@ -7,7 +7,7 @@ public:
     struct element;
     LinkStack();
     ~LinkStack();
-    void push(ElemType &);
+    void push(const ElemType &);
     void pop();
     ElemType & top() {return _top->data;}
     bool empty() {return _top == nullptr;}
@@ -50,7 +50,7 @@ void LinkStack<ElemType>::pop() {
 }
 
 template<typename ElemType>
-void LinkStack<ElemType>::push(ElemType & elem) {
+void LinkStack<ElemType>::push(const ElemType & elem) {
     LinkStack::element * t = new element;
     t->data = elem;
     t->next = _top;

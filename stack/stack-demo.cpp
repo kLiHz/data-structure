@@ -1,34 +1,50 @@
 #include <iostream>
+//#include <stack>
+#include <string>
 #include "linkstack.hpp"
 
 //已知表达式存储在字符串中，其中可以有大括号、中括号和小括号，试编写算法判断表达式中括号是否匹配。
-bool is_matched(const char * str) 
+
+bool paired_brackets(char left, char right) {
+    return 
+        (left == '(' && right == ')') 
+        || (left == '[' && right == ']') 
+        || (left == '{' && right == '}');
+}
+
+bool is_matched(const std::string & str) 
 {
+    //std::stack<char> l;
     LinkStack<char> l;
-    char * i = (char *) str;
-    while (*i != '\0') {
-        if (*i == '(' || *i == '[' || *i == '{') l.push(*i);
-        else if (*i == ')') {
-            if (l.top() != '(') { std::cout << *i << " dosen't match!\n"; return false;}
-            else l.pop();
-        }
-        else if (*i == ']') {
-            if (l.top() != '[') { std::cout << *i << " dosen't match!\n"; return false;}
-            else l.pop();
-        }
-        else if (*i == '}') {
-            if (l.top() != '{') { std::cout << *i << " dosen't match!\n"; return false;}
-            else l.pop();
+    auto i = str.begin();
+    bool all_bracket_paired = true;
+    while (*i != '\0' && all_bracket_paired) {
+        switch (*i) 
+        {
+        case '(':  case '[':  case '{':
+            l.push(*i);
+            break;
+        case ')':  case ']':  case '}':
+            if ( paired_brackets( l.top(),  *i) ) l.pop();
+            else { 
+                all_bracket_paired = false;
+            }
+            break;
         }
         ++i;
     }
-    if (!l.empty()) { std:: cout << l.top() << " doesn't match!\n"; return false; }
-    else { return true; }
+    if (!l.empty() || !all_bracket_paired) { 
+        std:: cout << l.top() << " doesn't match!\n";
+        return false; 
+    }
+    return true;
 }
 
 int main() 
 {
-    char str[] = "(!!((/{^${.{}}}/[==.[[*]&]#])))";
-    if (is_matched(str)) std::cout << "All matched!\n"; 
+    std::string brackets;
+    std::getline(std::cin, brackets);
+    if (is_matched(brackets)) std::cout << "All matched!" << std::endl; 
+    else std::cout << "Brackets doesn't match!" << std::endl;
     return 0;
 }
