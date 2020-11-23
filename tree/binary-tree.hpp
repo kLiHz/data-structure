@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <stack>
 
 template<typename ElemType>
 class BinaryTree 
@@ -16,6 +17,60 @@ public:
             Node *      _right = nullptr)
         : data(_elem), left(_left), right(_right) {};
         ~Node() {};
+        int degree() {
+            return 2 - (!left) - (!right);
+        }
+    };
+    class iterator {
+    public:
+        enum IterStatus { THIS, LEFT, RIGHT };
+        enum IterStrategy { PRE, POST, MID };
+        virtual iterator & operator++() = 0; // ++i
+        ElemType&   operator*() {  // dereference
+            return this->the_node->data; 
+        }
+        ElemType*   operator->() {
+            return &(this->the_node->data);
+        }
+        bool operator!=(const iterator & i) { 
+            return this->the_node != i.the_node;
+        } 
+        iterator( IterStrategy _strategy, Node * _the_node ) 
+        : strategy(_strategy), the_node(_the_node), status(THIS) {}
+    protected:
+        Node * the_node;
+        std::stack<Node*> previous;
+        IterStatus status;
+        IterStrategy strategy;
+    };
+    class pre_iterator : public iterator {
+    public:
+        pre_iterator( Node * _the_node = nullptr ) : iterator( iterator::PRE, _the_node ) {} 
+        virtual iterator & operator++() {
+            if (iterator::the_node->left) {
+                iterator::previous.push(iterator::the_node);
+                iterator::the_node = iterator::the_node->left;
+            }
+            else if (iterator::the_node->right) {
+                iterator::previous.push(iterator::the_node);
+                iterator::the_node = iterator::the_node->right;
+            }
+            else {
+                if (iterator::previous.empty()) {
+                    iterator::the_node = nullptr;
+                    return *this;
+                }
+                iterator::the_node = iterator::previous.top(); 
+                iterator::previous.pop();
+                iterator::the_node = iterator::the_node->right;
+                while (!iterator::the_node) {
+                    iterator::the_node = iterator::previous.top(); 
+                    iterator::previous.pop();
+                    iterator::the_node = iterator::the_node->right;
+                }
+            }
+            return *this;
+        }
     };
     BinaryTree() : root(nullptr) {};
     BinaryTree(const ElemType & _elem) { root = new Node(_elem); };
@@ -44,6 +99,9 @@ public:
         postOrder(root, q);
         return q;
     }
+    std::list<Node*> pre_traverse_nr() const;
+    std::list<Node*> mid_traverse_nr() const;
+    std::list<Node*> post_traverse_nr() const;
 private:
     static void preOrder(Node * t, std::list<Node*> & q) {
         if (t) {
@@ -88,3 +146,19 @@ private:
 
     Node * root;
 };
+
+template<typename ElemType>
+std::list< typename BinaryTree<ElemType>::Node* > 
+BinaryTree<ElemType>::pre_traverse_nr() const
+{
+    std::stack<Node*> s;
+    std::list<Node*> result;
+    if (root) s.push(root);
+    while (!s.empty()) {
+        Node * current = s.top(); s.pop();
+        result.push_back(current);
+        if (current->right) s.push(current->right);
+        if (current->left) s.push(current->left);
+    }
+    return result;
+}
