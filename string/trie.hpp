@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cstring>
-#include <list>
+#include <map>
 #include <stack>
 
 namespace trie
@@ -12,17 +12,18 @@ namespace trie
     struct node {
         CHAR_TYPE ch;
         size_t cnt;
-        std::list<node<CHAR_TYPE>*> children;
-        node() { ch = ' '; cnt = 0; }
+        std::map<CHAR_TYPE, node *> children;
+        node() : ch(' '), cnt(0) {}
+        node(CHAR_TYPE _ch) : ch(_ch), cnt(0) {}
         ~node() {
-            for (auto i : children) { delete i; }
+            for (auto i : children) { delete i.second; }
         }
         void traverse(std::string & str) {
             if (cnt > 0) 
                 std::cout << str << " cnt: " << cnt << std::endl;
             for (auto i : children) {
-                str += i->ch;
-                i->traverse(str);
+                str += i.second->ch;
+                i.second->traverse(str);
                 str.pop_back();
             }
             return;
@@ -42,16 +43,13 @@ namespace trie
     node<CHAR_TYPE>* Trie<CHAR_TYPE>::insert(const std::string & str) {
         node<CHAR_TYPE> * now = &root;
         for (auto i : str) {
-            bool found = false;
-            for (auto j : now->children) {
-                if (j->ch == i) {
-                    found = true; now = j; break;
-                }
+            auto j = now->children.find(i);
+            if (j != now->children.end()) {
+                now = j->second;
             }
-            if (!found) {
-                auto t = new node<CHAR_TYPE>;
-                t->ch = i;
-                now->children.push_back(t);
+            else { // str not found
+                auto t = new node<CHAR_TYPE>(i);
+                now->children.insert({i,t});
                 now = t;
             }
         }
@@ -62,53 +60,37 @@ namespace trie
     node<CHAR_TYPE>* Trie<CHAR_TYPE>::find(const std::string & str) {
         node<CHAR_TYPE> * now = &root;
         for (auto i : str) {
-            bool found = true;
-            for (auto j : now->children) {
-                if (j->ch == i) {
-                    found = true; now = j; break;
-                }
+            auto j = now->children.find(i);
+            if (j != now->children.end()) {
+                now = j->second;
             }
-            if (!found) {
-                return nullptr;
-            }
+            else return nullptr;
         }
         if (now->cnt > 0) return now;
-        else return nullptr; // cannot find str
+        else return nullptr; // str not found
     }
     template<typename CHAR_TYPE> 
     bool Trie<CHAR_TYPE>::erase(const std::string & str) {
-        typedef typename std::list<node<CHAR_TYPE>*>::iterator node_ptr_list_it;
         typedef node<CHAR_TYPE>* node_ptr;
         node_ptr now = &root;
         std::stack<node_ptr> history_node_ptr;
-        std::stack<node_ptr_list_it> history_node_ptr_it;
         history_node_ptr.push(&root);
         for (auto i : str) {
-            bool found = true;
-            node_ptr_list_it j = now->children.begin();
-            while (j != now->children.end()) {
-                if ((*j)->ch == i) {
-                    found = true;
-                    now = *j;
-                    history_node_ptr.push(now);
-                    history_node_ptr_it.push(j); 
-                    // j is the position of node:now in its father's children list
-                    break;
-                }
-                ++j;
+            auto j = now->children.find(i);
+            if (j != now->children.end()) {
+                now = j->second;
+                history_node_ptr.push(now);
             }
-            if (!found) return false; //cannot find str
+            else return false; // cannot found str
         }
         if (now->cnt > 0) { // found
             now->cnt = 0; // remove the word from the tree
-            while (!history_node_ptr_it.empty()) {
-                auto i = history_node_ptr.top(); 
+            while (history_node_ptr.size() > 1) {
+                auto i = history_node_ptr.top();
                 history_node_ptr.pop();
                 if (i->children.empty() && i->cnt == 0) {
+                    (history_node_ptr.top())->children.erase(i->ch);
                     delete i;
-                    auto p = history_node_ptr_it.top();
-                    history_node_ptr_it.pop();
-                    history_node_ptr.top()->children.erase(p);
                 }
                 else break;
             }
