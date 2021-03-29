@@ -18,14 +18,14 @@ bool is_matched(const std::string & str)
     LinkStack<char> l;
     auto i = str.begin();
     bool all_bracket_paired = true;
-    while (*i != '\0' && all_bracket_paired) {
+    while (i != str.end() && all_bracket_paired) {
         switch (*i) 
         {
         case '(':  case '[':  case '{':
             l.push(*i);
             break;
         case ')':  case ']':  case '}':
-            if ( paired_brackets( l.top(),  *i) ) l.pop();
+            if ( !l.empty() && paired_brackets( l.top(),  *i) ) l.pop();
             else { 
                 all_bracket_paired = false;
             }
