@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <stack>
+#include <queue>
 
 template<typename ElemType>
 class BinaryTree 
@@ -25,8 +26,11 @@ public:
     public:
         enum IterStatus { THIS, LEFT, RIGHT };
         enum IterStrategy { PRE, POST, MID };
-        virtual iterator & operator++() = 0; // ++i
-        ElemType&   operator*() {  // dereference
+        //void        operator++(int) = 0; // i++
+        virtual iterator &  operator++()    = 0; // ++i
+        //void        operator--(int) = 0; // i--
+        //void        operator--()    = 0; // --i
+        ElemType&   operator*() {        // dereference
             return this->the_node->data; 
         }
         ElemType*   operator->() {
@@ -102,6 +106,7 @@ public:
     std::list<Node*> pre_traverse_nr() const;
     std::list<Node*> mid_traverse_nr() const;
     std::list<Node*> post_traverse_nr() const;
+    std::list< std::pair<Node*,int> > layer_traverse() const;
 private:
     static void preOrder(Node * t, std::list<Node*> & q) {
         if (t) {
@@ -124,6 +129,11 @@ private:
             q.push_back(t);
         }
     }
+    //static void layerOrder(Node * t, std::list<Node*> & q) {
+    //    if (t) q.push_back(t);
+    //    if (t->left) q.push_back(t);
+    //    if (t->right) q.push_back(t);
+    //}
     void    clear(Node * t) {
         if (t) {
             if (t->left) clear(t->left);
@@ -162,3 +172,36 @@ BinaryTree<ElemType>::pre_traverse_nr() const
     }
     return result;
 }
+
+template<typename ElemType>
+std::list< typename BinaryTree<ElemType>::Node* > 
+BinaryTree<ElemType>::mid_traverse_nr() const
+{
+    std::stack<Node*> s;
+    std::list<Node*> result;
+    s.push(root);
+    do {
+        Node * current = s.top();
+        if (current->right) s.push(current->right);
+        if (current->left) s.push(current->left);
+        s.pop();
+        result.push_back(current);
+    } while (!s.empty());
+    return result;
+}
+
+template<typename ElemType>
+std::list< std::pair< typename BinaryTree<ElemType>::Node*, int> > 
+BinaryTree<ElemType>::layer_traverse() const {
+    std::list < std::pair<Node*, int> > result;
+    std::queue< std::pair<Node*, int> > q;
+    if (root) q.push( std::pair<Node*, int>(root,1) );
+    while (!q.empty()) {
+        auto t = q.front();
+        result.push_back(t);
+        q.pop();
+        if (t.first->left) q.push(std::pair<Node*, int>(t.first->left, t.second + 1) );
+        if (t.first->right) q.push(std::pair<Node*, int>(t.first->right, t.second + 1) );
+    }
+    return result;
+} 

@@ -1,4 +1,5 @@
 #include "binary-tree.hpp"
+#include <cmath>
 
 template<typename T>
 void preOrder(BinaryTree<T> & t) {
@@ -45,4 +46,28 @@ int main()
     preOrder(tree);
     midOrder(tree);
     postOrder(tree);
+    //auto l = tree.pre_traverse_nr();
+    //for (auto i : l) std::cout << i->data;
+    //BTchar::pre_iterator i(root);
+    //while(i != BTchar::pre_iterator()) {
+    //    std::cout << *i << ' ';
+    //    ++i;
+    //}
+    auto s = tree.layer_traverse();
+    // 计算第k层的节点数目
+    int layer_num = 3, layer_cnt = 0;
+    for (auto i : s) {
+        if (i.second == layer_num) ++layer_cnt;
+    }
+    std::cout << layer_cnt << std::endl;
+    // 判断是否为二叉树
+    int current_layer = s.front().second, cnt = 0;
+    for (auto i : s) {
+        if (i.second == current_layer) ++cnt;
+        else if (i.second > current_layer) {
+            cnt = 0;
+            current_layer = i.second;
+        }
+    }
+    std::cout << "The tree " << ((cnt == pow(2,current_layer)) ? "is" : "is not") << " a complete binary tree.";
 }
