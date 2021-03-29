@@ -119,6 +119,14 @@ public:
         last->next = new_node;
         head->prior = new_node;
     }
+    // void push_back(const GAtom<T> & item) {
+    //     GListElement<T>* item_ptr = nullptr;
+    //     item_ptr = new GAtom<T>(item);
+    //     auto last = head->prior;
+    //     auto new_node = new node(item_ptr, head, last);
+    //     last->next = new_node;
+    //     head->prior = new_node;
+    // }
     int depth() {
         int depth = 0;
         for (auto i : *this) {
