@@ -3,3 +3,6 @@
 *.out
 *.o
 *.exe
+
+[Bb]uild
+[Dd]ebug
