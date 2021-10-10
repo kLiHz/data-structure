@@ -16,8 +16,8 @@ int main()
     for (int i = 0; i < 9; ++i) { a[i] = distrib(gen); }
     for (int i = 0; i < 9; ++i) { b[i] = distrib(gen); }
 
-	std::sort(a, a + 9);
-	std::sort(b, b + 9);
+    std::sort(a, a + 9);
+    std::sort(b, b + 9);
 
     LinkNode * L1 = InitList();
     InsertArrayListRear(L1,a,9);
