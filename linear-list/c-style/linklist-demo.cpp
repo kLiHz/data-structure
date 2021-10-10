@@ -1,10 +1,23 @@
 #include "linklist.h"
+#include <random>
+#include <algorithm>
 
 int main()
 {
     //ElemType a[] = {11,22,33,44,44,55,66,77,44}, e;
-    ElemType a[] = {1,2,3,5,6,7,8,8,9};
-    ElemType b[] = {2,4,5,6,8,9,9,10,13};
+    ElemType a[9] = {};//= {1,2,3,5,6,7,8,8,9};
+    ElemType b[9] = {};//= {2,4,5,6,8,9,9,10,13};
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_int_distribution<> distrib(1, 15);
+
+    for (int i = 0; i < 9; ++i) { a[i] = distrib(gen); }
+    for (int i = 0; i < 9; ++i) { b[i] = distrib(gen); }
+
+    std::sort(a, a + 9);
+    std::sort(b, b + 9);
 
     LinkNode * L1 = InitList();
     InsertArrayListRear(L1,a,9);
