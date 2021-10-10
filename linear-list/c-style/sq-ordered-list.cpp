@@ -2,7 +2,10 @@
 //从下标为0处开始存储 
 #include <stdlib.h>
 #include <stdio.h>
-#define MAX_SIZE 30
+#include <random>
+#include <algorithm>
+
+#define MAX_SIZE 1000
 #define bool int
 #define true 1
 #define false 0
@@ -183,6 +186,25 @@ void SqAscListSubtract(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
 	}
 }
 
+void SqAscListIntersection(SqAscList * A, SqAscList * B, SqAscList * C)
+{
+    int idx_a = 0, idx_b = 0;
+    int idx_c = 0;
+    while (idx_a < A->length && idx_b < B->length) {
+        if (A->data[idx_a] == B->data[idx_b]) {
+            C->data[idx_c] = A->data[idx_a];
+            idx_c++;
+            idx_a++;
+            idx_b++;
+        }
+        else if (A->data[idx_a] < B->data[idx_b]) {
+            while (A->data[idx_a] < B->data[idx_b]) idx_a++;
+        } 
+        else if (A->data[idx_a] > B->data[idx_b]) {
+            while (A->data[idx_a] > B->data[idx_b]) idx_b++;
+        }
+    }
+}
 /*void SqAscListIntersection(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
 //集合有序，可简化到O(n)的复杂度
 {
@@ -207,8 +229,20 @@ void SqAscListSubtract(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
 
 int main()
 {
-	int a[] = {2,3,4,4,5,5,6,6,6,7,8,8,8};
-	int b[] = {3,3,4,4,4,8,9,10,11,12,12};
+	std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_int_distribution<> distrib(1, 15);
+
+	int a[13] = {};//= {2,3,4,4,5,5,6,6,6,7,8,8,8};
+	int b[11] = {};//= {3,3,4,4,4,8,9,10,11,12,12};
+
+    for (int i = 0; i < 13; ++i) { a[i] = distrib(gen); }
+    for (int i = 0; i < 11; ++i) { b[i] = distrib(gen); }
+	
+	std::sort(a, a + 13);
+	std::sort(b, b + 11);
+
 	SqAscList * L1 = InitList();
 	SqAscList * L2 = InitList();
 	CreateList(L1,a,13);
@@ -237,7 +271,7 @@ int main()
 	printf("L1 ++ L2: ");
 	PrintSqList(L3);
 
-	//SqAscListIntersection(L1,L2,L3);
+	SqAscListIntersection(L1,L2,L3);
 	printf("L1 ^ L2: ");
 	PrintSqList(L3);
 
