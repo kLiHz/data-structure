@@ -8,7 +8,7 @@ int main()
     ElemType a[9] = {};//= {1,2,3,5,6,7,8,8,9};
     ElemType b[9] = {};//= {2,4,5,6,8,9,9,10,13};
 
-	std::random_device rd;
+    std::random_device rd;
     std::mt19937 gen(rd());
 
     std::uniform_int_distribution<> distrib(1, 15);

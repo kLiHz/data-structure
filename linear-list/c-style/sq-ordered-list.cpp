@@ -186,59 +186,50 @@ void SqAscListSubtract(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
 	}
 }
 
+// 有序（升序）顺序表求交集
 void SqAscListIntersection(SqAscList * A, SqAscList * B, SqAscList * C)
+// 集合有序，可简化到 O(n) 的复杂度
 {
-    int idx_a = 0, idx_b = 0;
-    int idx_c = 0;
-    while (idx_a < A->length && idx_b < B->length) {
-        if (A->data[idx_a] == B->data[idx_b]) {
-            C->data[idx_c] = A->data[idx_a];
-            idx_c++;
-            idx_a++;
-            idx_b++;
-        }
-        else if (A->data[idx_a] < B->data[idx_b]) {
-            while (A->data[idx_a] < B->data[idx_b]) idx_a++;
-        } 
-        else if (A->data[idx_a] > B->data[idx_b]) {
-            while (A->data[idx_a] > B->data[idx_b]) idx_b++;
-        }
-    }
-}
-/*void SqAscListIntersection(SqAscList * La, SqAscList * Lb, SqAscList * Lc)
-//集合有序，可简化到O(n)的复杂度
-{
-	int i = 0, j = 0;
-	if (La->length == 0 || Lb->length == 0) 
-	{ //集合有一个为空，返回空集
-		Lc->length = 0;
+	int idx_a = 0, idx_b = 0;
+	int idx_c = 0;
+	if (A->length == 0 || B->length == 0) { 
+		//集合有一个为空，返回空集
+		C->length = 0;
 		return;
 	}
-	Lc->length = 0;
-	while (i < La->length && j < Lb->length)
-	{
-		while(i < La->length - 1 && La->data[i] == La->data[i+1]) ++i;
-		while(j < Lb->length - 1 && Lb->data[j] == Lb->data[j+1]) ++j;
-		if (La->data[i] == Lb->data[j]) Lc->data[(Lc->length)++] = La->data[i];
-		else if (La->data[i] < Lb->data[j]) ++i;
-		else ++j; 
+	C->length = 0;
+	while (idx_a < A->length && idx_b < B->length) {
+		if (A->data[idx_a] == B->data[idx_b]) {
+			C->data[idx_c] = A->data[idx_a];
+			idx_c++;
+			idx_a++;
+			idx_b++;
+		}
+		else if (A->data[idx_a] < B->data[idx_b]) {
+			// 递增 A 表上的指针
+			while (A->data[idx_a] < B->data[idx_b]) idx_a++;
+		} 
+		else if (A->data[idx_a] > B->data[idx_b]) {
+			// 递增 B 表上的指针
+			while (A->data[idx_a] > B->data[idx_b]) idx_b++;
+		}
 	}
-}*/
+}
 
 //bool SqAscListDiff(SqAscList * La, SqAscList * Lb, SqAscList * Lc);
 
 int main()
 {
 	std::random_device rd;
-    std::mt19937 gen(rd());
+	std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<> distrib(1, 15);
+	std::uniform_int_distribution<> distrib(1, 15);
 
 	int a[13] = {};//= {2,3,4,4,5,5,6,6,6,7,8,8,8};
 	int b[11] = {};//= {3,3,4,4,4,8,9,10,11,12,12};
 
-    for (int i = 0; i < 13; ++i) { a[i] = distrib(gen); }
-    for (int i = 0; i < 11; ++i) { b[i] = distrib(gen); }
+	for (int i = 0; i < 13; ++i) { a[i] = distrib(gen); }
+	for (int i = 0; i < 11; ++i) { b[i] = distrib(gen); }
 	
 	std::sort(a, a + 13);
 	std::sort(b, b + 11);
