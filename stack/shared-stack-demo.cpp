@@ -5,17 +5,17 @@ class BiStackMemory
     int top_pos[2];
     int usage;
     T *ptr;
-    int size;
+    int len;
 public:
     enum class GrowthDirection { UP, DOWN };
 
     BiStackMemory() = delete;
     BiStackMemory(const BiStackMemory &) = delete;
 
-    BiStackMemory(size_t n) : ptr(new T[n]), size(n) {
+    BiStackMemory(size_t n) : ptr(new T[n]), len(n) {
         usage = 0;
         top_pos[0] = 0;
-        top_pos[1] = size - 1;
+        top_pos[1] = len - 1;
     }
 
     ~BiStackMemory() { delete[] ptr; }
@@ -34,7 +34,7 @@ public:
         if (dir == GrowthDirection::UP) {
             top_pos[0] = 0;
         } else if (dir == GrowthDirection::DOWN) {
-            top_pos[1] = size - 1;
+            top_pos[1] = len - 1;
         }
     }
 
@@ -43,13 +43,13 @@ public:
     }
 
     auto empty() {
-        return (top_pos[0] == 0) && (top_pos[1] == size - 1);
+        return (top_pos[0] == 0) && (top_pos[1] == len - 1);
     }
 
     auto empty(GrowthDirection dir) {
         return dir == GrowthDirection::UP ?
             (top_pos[0] == 0) :
-            (top_pos[1] == size - 1);
+            (top_pos[1] == len - 1);
     }
 
     auto push(GrowthDirection dir, const T& val) {
@@ -76,9 +76,9 @@ public:
 
     auto top(GrowthDirection dir) {
         if (dir == GrowthDirection::UP) {
-            return ptr[top_pos[0]];
+            return ptr[top_pos[0]-1];
         } else {
-            return ptr[top_pos[1]];
+            return ptr[top_pos[1]+1];
         }
     };
 };
