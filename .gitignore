@@ -6,3 +6,7 @@
 
 [Bb]uild
 [Dd]ebug
+
+.idea/
+cmake-build-debug/
+cmake-build-release/
