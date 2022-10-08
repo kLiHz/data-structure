@@ -34,6 +34,7 @@ public:
     Queue(const Queue &) = delete;
     Queue(size_t n) : len(n), data(new T[n]), front(0), rear(0) {}
     Queue & operator==(Queue const & ) = delete;
+    ~Queue() { delete[] data; }
     auto empty() { return front == rear; }
     auto full() { return increasedIndex(rear) == front; }
     auto push(const T & a) {
