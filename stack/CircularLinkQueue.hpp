@@ -102,17 +102,17 @@ bool full() const { return this->rear != nullptr && (this->rear->next == this->h
 void push(T&& e) {
   Node *s;
   if (this->rear == nullptr) {  // 空队列
-    this->head->data = e;
+    this->head->data = std::move(e);
     this->rear = this->head;
   } else if (this->rear->next == this->head) {  // 队列满则开辟一个空间
     s = new Node;
-    s->data = e;
+    s->data = std::move(e);
     s->next = this->rear->next;
     this->rear->next = s;
     this->rear = s;
   } else {  // 有空结点
     this->rear = this->rear->next;
-    this->rear->data = e;
+    this->rear->data = std::move(e);
   }
 }
 
