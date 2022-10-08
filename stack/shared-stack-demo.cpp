@@ -1,3 +1,4 @@
+#include <cstddef>
 
 template <typename T>
 class BiStackMemory
@@ -12,7 +13,7 @@ public:
     BiStackMemory() = delete;
     BiStackMemory(const BiStackMemory &) = delete;
 
-    BiStackMemory(size_t n) : ptr(new T[n]), len(n) {
+    BiStackMemory(std::size_t n) : ptr(new T[n]), len(n) {
         usage = 0;
         top_pos[0] = 0;
         top_pos[1] = len - 1;
