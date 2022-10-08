@@ -13,140 +13,132 @@
  * */
 
 #include <iostream>
-#include <string>
 #include <sstream>
 
-template<typename T>
-class CircularLinkQueue {
+template <typename T> class CircularLinkQueue {
 
-struct Node {
-  T data;
-  Node *next;
-}; // 数据结点
+  struct Node {
+    T data;
+    Node *next;
+  }; // 数据结点
 
-Node *head, *rear;
+  Node *head, *rear;
 
 public:
+  // 空队列: 将 rear 置空表示空队列
+  // 队列初始化后有 1 个空间
+  //
+  //       front
+  //       | rear = nullptr
+  //       |
+  //       -----
+  //   --->| / |---
+  //   |   -----  |
+  //   ------------
 
-// 空队列: 将 rear 置空表示空队列
-// 队列初始化后有 1 个空间
-//
-//       front
-//       | rear = nullptr
-//       |
-//       -----
-//   --->| / |---
-//   |   -----  |
-//   ------------
+  // 空队列
+  bool empty() const { return this->rear == nullptr; }
 
-// 空队列
-bool empty() const { return this->rear == nullptr; }
-
-// 初始化队列
-CircularLinkQueue() {
-  Node *s;
-  s = new Node;
-  s->next = s;
-  s->data = -1;  // mock data
-  this->head = s;
-  this->rear = nullptr;
-}
-
-// 队列空间满的情况 / 没有空余空间
-// 情况 1:
-//
-//       front           rear
-//       |               |
-//       -----   -----   -----
-//   --->| E |-->| E |-->| E |---
-//   |   -----   -----   -----  |
-//   ----------------------------
-//
-//  情况 2:
-//
-//       front
-//       | rear
-//       | |
-//       -----
-//   --->| E |---
-//   |   -----  |
-//   ------------
-
-// 队列有空余空间的情况:
-//
-//       front
-//       | rear
-//       | |
-//       -----   -----   -----
-//   --->| E |-->| / |-->| / |---
-//   |   -----   -----   -----  |
-//   ----------------------------
-
-// 队列没有空余空间
-bool full() const { return this->rear != nullptr && (this->rear->next == this->head); }
-
-// 释放队列
-~CircularLinkQueue() {
-  Node *i = this->head->next;
-  while (i != this->head) {
-    // cout << "Freeing " << i->data << "\n";
-    Node *t = i;
-    i = i->next;
-    delete t;
-  }
-  // cout << "Freeing " << i->data << "\n";
-  delete i;
-}
-
-// 入队
-void push(T&& e) {
-  Node *s;
-  if (this->rear == nullptr) {  // 空队列
-    this->head->data = std::move(e);
-    this->rear = this->head;
-  } else if (this->rear->next == this->head) {  // 队列满则开辟一个空间
-    s = new Node;
-    s->data = std::move(e);
-    s->next = this->rear->next;
-    this->rear->next = s;
-    this->rear = s;
-  } else {  // 有空结点
-    this->rear = this->rear->next;
-    this->rear->data = std::move(e);
-  }
-}
-
-// 出队
-void pop() {
-  if (this->head == this->rear) {  // 一个元素的情况
-    // e = q->rear->data;
+  // 初始化队列
+  CircularLinkQueue() {
+    Node *s = new Node;
+    s->next = s;
+    this->head = s;
     this->rear = nullptr;
   }
-  else {
-    // e = q->front->data;
-    this->head = this->head->next;
+
+  // 队列空间满的情况 / 没有空余空间
+  // 情况 1:
+  //
+  //       front           rear
+  //       |               |
+  //       -----   -----   -----
+  //   --->| E |-->| E |-->| E |---
+  //   |   -----   -----   -----  |
+  //   ----------------------------
+  //
+  //  情况 2:
+  //
+  //       front
+  //       | rear
+  //       | |
+  //       -----
+  //   --->| E |---
+  //   |   -----  |
+  //   ------------
+
+  // 队列有空余空间的情况:
+  //
+  //       front
+  //       | rear
+  //       | |
+  //       -----   -----   -----
+  //   --->| E |-->| / |-->| / |---
+  //   |   -----   -----   -----  |
+  //   ----------------------------
+
+  // 队列没有空余空间
+  bool full() const {
+    return this->rear != nullptr && (this->rear->next == this->head);
   }
-}
 
-auto front() const {
-  return this->head->data;
-}
-
-auto to_string() const {
-  std::ostringstream ss;
-  Node *i = this->head;
-  if (!this->empty()) {
-    do {
-      ss << i->data << " ";
+  // 释放队列
+  ~CircularLinkQueue() {
+    Node *i = this->head->next;
+    while (i != this->head) {
+      // cout << "Freeing " << i->data << "\n";
+      Node *t = i;
       i = i->next;
-    } while (i != this->rear->next);
+      delete t;
+    }
+    // cout << "Freeing " << i->data << "\n";
+    delete i;
   }
-  return ss.str();
-}
 
+  // 入队
+  void push(T&& e) {
+    if (this->rear == nullptr) { // 空队列
+      this->head->data = std::move(e);
+      this->rear = this->head;
+    } else if (this->rear->next == this->head) { // 队列满则开辟一个空间
+      Node *s = new Node;
+      s->data = std::move(e);
+      s->next = this->rear->next;
+      this->rear->next = s;
+      this->rear = s;
+    } else { // 有空结点
+      this->rear = this->rear->next;
+      this->rear->data = std::move(e);
+    }
+  }
+
+  // 出队
+  void pop() {
+    if (this->head == this->rear) { // 一个元素的情况
+      // e = q->rear->data;
+      this->rear = nullptr;
+    } else {
+      // e = q->front->data;
+      this->head = this->head->next;
+    }
+  }
+
+  auto front() const { return this->head->data; }
+
+  auto to_string() const {
+    std::ostringstream ss;
+    Node *i = this->head;
+    if (!this->empty()) {
+      do {
+        ss << i->data << " ";
+        i = i->next;
+      } while (i != this->rear->next);
+    }
+    return ss.str();
+  }
 };
 
-template<typename T>
+template <typename T>
 std::ostream& operator<<(std::ostream& os, CircularLinkQueue<T> const& q) {
   os << q.to_string();
   return os;
