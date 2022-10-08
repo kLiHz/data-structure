@@ -112,6 +112,23 @@ public:
     }
   }
 
+  // 入队
+  void push(T const& e) {
+    if (this->rear == nullptr) { // 空队列
+      this->head->data = e;
+      this->rear = this->head;
+    } else if (this->rear->next == this->head) { // 队列满则开辟一个空间
+      Node *s = new Node;
+      s->data = e;
+      s->next = this->rear->next;
+      this->rear->next = s;
+      this->rear = s;
+    } else { // 有空结点
+      this->rear = this->rear->next;
+      this->rear->data = e;
+    }
+  }
+
   // 出队
   void pop() {
     if (this->head == this->rear) { // 一个元素的情况
