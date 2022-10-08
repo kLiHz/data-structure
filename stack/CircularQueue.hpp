@@ -29,6 +29,7 @@ class Queue {
     auto increasedIndex(size_t i) {
         return (i + 1) % len;
     };
+
 public:
     Queue() = delete;
     Queue(const Queue &) = delete;
@@ -61,18 +62,9 @@ public:
             auto val = std::to_string(q.data[i]);
             data_line += val + ' ';
             auto blank = std::string(val.length() + 1, ' ');
-            if (x1 == i) {
-                blank[0] = '^';
-                front_tag_line += "front";
-            } else {
-                front_tag_line += blank;
-            }
-            if (x2 == i) {
-                blank[0] = '^';
-                end_tag_line += "end";
-            } else {
-                end_tag_line += blank;
-            }
+            front_tag_line += (x1 == i) ? "front" : blank;
+            end_tag_line += (x2 == i) ? "end" : blank;
+            if (x1 == i || x2 == i) { blank[0] = '^'; }
             indicator_line += blank;
         }
         os << data_line << "\n" << indicator_line << "\n" << front_tag_line << "\n" << end_tag_line;
