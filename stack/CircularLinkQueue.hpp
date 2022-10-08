@@ -20,6 +20,9 @@ template <typename T> class CircularLinkQueue {
   struct Node {
     T data;
     Node *next;
+    Node() : next(nullptr) {}
+    Node(T const& t, Node* n) : data(t), next(n) {}
+    Node(T&& t, Node* n) : data(std::move(t)), next(n) {}
   }; // 数据结点
 
   Node *head, *rear;
@@ -101,9 +104,7 @@ public:
       this->head->data = std::move(e);
       this->rear = this->head;
     } else if (this->rear->next == this->head) { // 队列满则开辟一个空间
-      Node *s = new Node;
-      s->data = std::move(e);
-      s->next = this->rear->next;
+      Node *s = new Node(std::move(e), this->rear->next);
       this->rear->next = s;
       this->rear = s;
     } else { // 有空结点
@@ -118,9 +119,7 @@ public:
       this->head->data = e;
       this->rear = this->head;
     } else if (this->rear->next == this->head) { // 队列满则开辟一个空间
-      Node *s = new Node;
-      s->data = e;
-      s->next = this->rear->next;
+      Node *s = new Node(e, this->rear->next);
       this->rear->next = s;
       this->rear = s;
     } else { // 有空结点
