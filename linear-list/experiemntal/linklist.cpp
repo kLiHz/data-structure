@@ -1,83 +1,127 @@
-
-template <typename ElemType>
+template <typename T>
 class LinkList {
-public:
-    struct LLNode {
-        ElemType val;
-        LLNode * next;
-        LLNode(const ElemType & e, LLNode * next_) : val(e), next(next_) {}
-        ~LLNode() { delete next; }
+private:
+    struct Node {
+        T data;
+        Node * next = nullptr;
+        Node(T val, Node * p) : data(val), next(p) {}
+        ~Node() { delete next; }
     };
 
-    LinkList() : base(ElemType{}, nullptr) {}
+    Node base;
+
+public:
+    LinkList() : base(T{}, nullptr) {}
+    ~LinkList() = default;
+
     void erase(int idx) {
         int i = 0;
-        LLNode * ptr = base.next;
-        LLNode * pre_ptr = &base;
-        while (i < idx && ptr != nullptr) {
-            pre_ptr = pre_ptr->next;
-            ptr = ptr->next;
+        Node * p = base.next;
+        Node * pre = &base;
+        while (i < idx && p != nullptr) {
+            pre = p;
+            p = p->next;
             i++;
         }
-        pre_ptr->next = ptr->next;
-        delete ptr;
+        pre->next = p->next;
+        p->next = nullptr;
+        delete p;
     }
-    LLNode * get_node(int idx) {
-        int i = 0;
-        LLNode * ptr = base.next;
-        while (i < idx && ptr != nullptr) {
-            ptr = ptr->next;
-            i++;
-        }
-        return ptr;
+
+    using Comparator = bool(T const&, T const&);
+
+    void sort(Comparator cmp) {
+        bool swapped;
+        Node* end = nullptr;
+        do {
+            Node* prev = &base;
+            Node* t = base.next;
+            Node* newEnd = nullptr;
+            swapped = false;
+            while (t != nullptr && t->next != end) {
+                if (!cmp(t->data, t->next->data)) {
+                    prev->next = t->next;
+                    t->next = t->next->next;
+                    prev->next->next = t;
+                    swapped = true;
+                    prev = prev->next;
+                    newEnd = t;
+                } else {
+                    prev = t;
+                    t = t->next;
+                }
+            }
+            end = newEnd;
+        } while (swapped);
     }
-    void push_front(const ElemType & val) {
-        LLNode * new_node = new LLNode(val, base.next);
-        base.next = new_node;
+
+    void push_front(const T & val) {
+        base.next = new Node(val, base.next);
     }
+
     class iterator {
-        LLNode * current;
-        LLNode * previous;
+        Node * p;
     public:
-        iterator() : current(nullptr), previous(nullptr) {}
-        iterator(LLNode * pre, LLNode * cur) : current(cur), previous(pre) {}
-        iterator & operator++() {
-            if (current == nullptr) return *this;
-            previous = current;
-            current = current->next;
+        iterator(Node* p_) : p(p_) {}
+        iterator& operator++() {
+            p = p->next;
             return *this;
         }
         iterator operator++(int) {
-            if (current == nullptr) return *this;
-            auto tmp = iterator(previous, current);
-            previous = current;
-            current = current->next;       
-            return tmp;
+            auto t = p;
+            p = p->next;
+            return iterator(t);
         }
-        bool operator==(const iterator & other) { return current == other.current; }
-        bool operator!=(const iterator & other) { return current != other.current; }
-        ElemType & operator*() { return (*current).val; }
+        bool operator==(const iterator & other) { return this->p == other.p; }
+        bool operator!=(const iterator & other) { return this->p != other.p; }
+        T & operator*() { return p->data; }
     };
-    iterator begin() { return iterator(&base, base.next); }
-    iterator end() { return iterator(); }
-private:
-    LLNode base;
+
+    iterator begin() { return { base.next }; }
+    iterator end() { return { nullptr }; }
 };
 
 #include <iostream>
+#include <string>
+
+enum class CharType {
+    NUM = 0, LOWER = 1, UPPER = 2, OTHER = 3,
+};
+
+CharType charType(char c) {
+    if ('0' <= c && c <= '9') {
+        return CharType::NUM;
+    } else if ('a' <= c && c <= 'z') {
+        return CharType::LOWER;
+    } else if ('A' <= c && c <= 'Z') {
+        return CharType::UPPER;
+    } else {
+        return CharType::OTHER;
+    }
+}
+
+bool cmp(char const& a, char const& b) {
+    if (charType(a) == charType(b)) {
+        return a < b;
+    } else {
+        return static_cast<int>(charType(a)) < static_cast<int>(charType(b));
+    }
+}
 
 int main() {
-    LinkList<int> a;
-    a.push_front(11);
-    a.push_front(12);
-    a.push_front(13);
-    auto p = a.get_node(1);
-    while (p != nullptr) {
-        std::cout << p->val;
-        p = p->next;
+    LinkList<char> list;
+    std::string s;
+
+    std::cin >> s;
+    auto it = s.rbegin();
+    while (it != s.rend()) {
+        list.insertFront(*it);
+        ++it;
     }
-    std::cout << '\n';
-    for (auto i : a) {
-        std::cout << i;
-    }
+
+    list.sort(cmp);
+
+    for (auto c : list) { std::cout << c; }
+
+    std::cout << "\n";
 }
