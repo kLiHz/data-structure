@@ -115,7 +115,7 @@ int main() {
     std::cin >> s;
     auto it = s.rbegin();
     while (it != s.rend()) {
-        list.insertFront(*it);
+        list.push_front(*it);
         ++it;
     }
 
